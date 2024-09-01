@@ -3,7 +3,7 @@
 import mongoose from "mongoose";
 
 import { env } from "../utils/env.js";
-export const initMongoDB = async () => {
+export const initMongoConnection = async () => {
     try {
         const user = env('MONGODB_USER');
         const password = env('MONGODB_PASSWORD');
@@ -12,7 +12,7 @@ export const initMongoDB = async () => {
 
         const DB_HOST = `mongodb+srv://${user}:${password}@${url}/${db}?retryWrites=true&w=majority&appName=Cluster0`;
         await mongoose.connect(DB_HOST);
-        console.log('Connect succes');
+        console.log('Mongo connection successfully established!');
     } catch (error) {
         console.log('Connect error', error.message);
         throw error;

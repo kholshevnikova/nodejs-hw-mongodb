@@ -21,6 +21,7 @@ const contactSchema = new Schema({
     isFavourite: {
         type: Boolean,
         default: false,
+        required: false,
     }
 }, { versionKey: false, timestamps: true });
 

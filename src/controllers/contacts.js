@@ -17,7 +17,8 @@ export const getContactByIdController = async (req, res, next) => {
     const contact = await contactServices.getContactById(id);
 
     if (!contact) {
-        next(createHttpError(404, "Contact not found"));
+      return next(createHttpError(404, "Contact not found"));
+
     }
 
     res.json({
@@ -49,5 +50,21 @@ export const deleteContactController = async (req, res, next) => {
         return;
     }
 
-    req.status(204).send();
+    res.status(204).send();
+};
+
+export const patchContactController = async (req, res, next) => {
+  const { id } = req.params;
+  const result = await contactServices.updateContact(id, req.body);
+
+  if (!result) {
+    return next(createHttpError(404, 'Contact not found'));
+
+  }
+
+  res.json({
+    status: 200,
+    message: 'Successfully patched a contact!',
+    data: result,
+  });
 };

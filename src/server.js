@@ -3,8 +3,8 @@ import cors from 'cors';
 import pino from 'pino-http';
 import { env } from './utils/env.js';
 import contactsRouter from './routers/contacts.js';
-// import {get} from 'mongoose';
-// import * as contactServices from './services/contacts.js';
+import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import { errorHandler } from './middlewares/errorHandler.js';
 
 
 
@@ -23,7 +23,11 @@ export const setupServer = () => {
     app.use(express.json());
 
     app.use(contactsRouter);
-    
+    app.use('*', notFoundHandler);
+    app.use(errorHandler);
+
+
+
 
     const PORT = Number(env("PORT", 3000));
     app.listen(PORT, () => {

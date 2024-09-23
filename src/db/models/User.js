@@ -1,4 +1,6 @@
 import { Schema, model } from 'mongoose';
+import { emailRegexp } from '../../constants/auth.js';
+import { handleSaveError, setUpdateOptions } from './hooks.js';
 
 const userSchema = new Schema(
   {
@@ -8,22 +10,22 @@ const userSchema = new Schema(
     },
     email: {
       type: String,
+      match: emailRegexp,
+      unique: true,
       required: true,
-      uniq,
     },
-    contactType: {
+    password: {
       type: String,
       required: true,
-      enum: contactTypeList,
-      default: 'personal',
-    },
-    isFavourite: {
-      type: Boolean,
-      default: false,
-      required: false,
     },
   },
+
   { versionKey: false, timestamps: true },
 );
 
-const ContactCollection = model('contact', contactSchema);
+userSchema.post('save', handleSaveError);
+userSchema.pre('findOneAndUpdate', setUpdateOptions);
+userSchema.post('findOneAndUpdate', handleSaveError);
+
+const UserCollection = model('user', userSchema);
+export default UserCollection;

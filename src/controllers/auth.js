@@ -17,6 +17,11 @@ export const signinController = async (req, res) => {
     httpOnly: true,
     expire: new Date(Date.now() + session.refreshTokenValidUntil),
   });
+  res.cookie('sessionId', session._id, {
+    httpOnly: true,
+    expire: new Date(Date.now() + session.refreshTokenValidUntil),
+  });
+
   res.json({
     status: 200,
     message: 'Successfully logged in an user!',

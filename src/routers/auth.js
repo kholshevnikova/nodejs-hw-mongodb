@@ -20,4 +20,9 @@ authRouter.post(
   ctrlWrapper(authControllers.signinController),
 );
 
-authRouter.post('/auth/refresh', authControllers.refreshController);
+authRouter.post(
+  '/auth/refresh',
+  ctrlWrapper(authControllers.refreshController),
+);
+
+authRouter.post('/auth/logout', ctrlWrapper(authControllers.logoutController));

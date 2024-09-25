@@ -4,15 +4,22 @@ import createHttpError from 'http-errors';
 import SessionCollection from '../db/models/Session.js';
 import { randomBytes } from 'crypto';
 import {
-  acсessTokenLifetime,
+  accessTokenLifetime,
   refreshTokenLifetime,
 } from '../constants/auth.js';
 
 const createSession = () => {
   const accessToken = randomBytes(30).toString('base64');
   const refreshToken = randomBytes(30).toString('base64');
-  const accessTokenValidUntil = new Date(Date.now() + acсessTokenLifetime);
+  const accessTokenValidUntil = new Date(Date.now() + accessTokenLifetime);
   const refreshTokenValidUntil = new Date(Date.now() + refreshTokenLifetime);
+
+  return {
+    accessToken,
+    refreshToken,
+    accessTokenValidUntil,
+    refreshTokenValidUntil,
+  };
 };
 
 export const signup = async (payload) => {
@@ -84,3 +91,7 @@ export const refreshSession = async ({ refreshToken, sessionId }) => {
 };
 
 export const findUser = (filter) => UserCollection.findOne(filter);
+
+export const logout = async (sessionId) => {
+  await SessionCollection.deleteOne({ _id: sessionId });
+};

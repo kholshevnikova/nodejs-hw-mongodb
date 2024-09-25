@@ -19,3 +19,10 @@ authRouter.post(
   validateBody(userSigInSchema),
   ctrlWrapper(authControllers.signinController),
 );
+
+authRouter.post(
+  '/auth/refresh',
+  ctrlWrapper(authControllers.refreshController),
+);
+
+authRouter.post('/auth/logout', ctrlWrapper(authControllers.logoutController));

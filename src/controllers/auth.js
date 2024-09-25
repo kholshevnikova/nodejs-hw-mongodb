@@ -30,3 +30,21 @@ export const signinController = async (req, res) => {
     },
   });
 };
+
+export const refreshController = async (req, res) => {
+  // console.log(req.cookies);
+  const { refreshToken, sessionId } = req.cookies;
+  const session = await authServices.refreshSession({
+    refreshToken,
+    sessionId,
+  });
+
+  res.cookie('refreshToken', session.refreshToken, {
+    httpOnly: true,
+    expire: new Date(Date.now() + session.refreshTokenValidUntil),
+  });
+  res.cookie('sessionId', session._id, {
+    httpOnly: true,
+    expire: new Date(Date.now() + session.refreshTokenValidUntil),
+  });
+};

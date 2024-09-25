@@ -19,3 +19,5 @@ authRouter.post(
   validateBody(userSigInSchema),
   ctrlWrapper(authControllers.signinController),
 );
+
+authRouter.post('/auth/refresh', authControllers.refreshController);

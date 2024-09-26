@@ -41,7 +41,7 @@ export const getAllContacts = async ({
   };
 };
 
-export const getContact = (filter) => ContactCollection.findById(filter);
+export const getContact = (filter) => ContactCollection.findOne(filter);
 
 export const createContact = (payload) => {
   const contact = ContactCollection.create(payload);
@@ -52,7 +52,7 @@ export const deleteContact = (filter) =>
   ContactCollection.findOneAndDelete(filter);
 
 export const updateContact = async (id, payload, options = {}) => {
-  const rawResult = await ContactCollection.findByIdAndUpdate(id, payload, {
+  const rawResult = await ContactCollection.findOneAndUpdate(id, payload, {
     new: true,
     includeResultMetadata: true,
     ...options,
@@ -65,7 +65,7 @@ export const updateContact = async (id, payload, options = {}) => {
   }
 
   return {
-    movie: rawResult.value,
+    contact: rawResult.value,
     isNew: Boolean(rawResult?.lastErrorObject?.upserted),
   };
 };

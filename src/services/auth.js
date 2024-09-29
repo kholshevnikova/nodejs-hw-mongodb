@@ -4,9 +4,17 @@ import createHttpError from 'http-errors';
 import SessionCollection from '../db/models/Session.js';
 import { randomBytes } from 'crypto';
 import {
+  TEMPLATES_DIR,
   accessTokenLifetime,
   refreshTokenLifetime,
 } from '../constants/auth.js';
+import jwt from 'jsonwebtoken';
+import { SMTP } from '../constants/auth.js';
+import { env } from '../utils/env.js';
+import { sendMail } from '../utils/sendMail.js';
+import handlebars from 'handlebars';
+import path from 'node:path';
+import fs from 'node:fs/promises';
 
 const createSession = () => {
   const accessToken = randomBytes(30).toString('base64');
@@ -94,4 +102,53 @@ export const findUser = (filter) => UserCollection.findOne(filter);
 
 export const logout = async (sessionId) => {
   await SessionCollection.deleteOne({ _id: sessionId });
+};
+
+export const requestResetToken = async (email) => {
+  const user = await UserCollection.findOne({ email });
+  if (!user) {
+    throw createHttpError(404, 'User not found');
+  }
+
+  const resetToken = jwt.sign(
+    {
+      sub: user._id,
+      email,
+    },
+    env('JWT_SECRET'),
+    {
+      expiresIn: '15m',
+    },
+  );
+  const resetPasswordTemplatePath = path.join(
+    TEMPLATES_DIR,
+    'reset-password-email.html',
+  );
+
+  const templateSource = (
+    await fs.readFile(resetPasswordTemplatePath)
+  ).toString();
+
+  const template = handlebars.compile(templateSource);
+  const html = template({
+    name: user.name,
+    link: `${env('APP_DOMAIN')}/reset-password?token=${resetToken}`,
+  });
+
+  try {
+    await sendMail({
+      from: env(SMTP.SMTP_FROM),
+      to: email,
+      subject: 'Reset your password',
+      html,
+    });
+  } catch (error) {
+    if (error.code === 'EENVELOPE') {
+      throw createHttpError(
+        500,
+        'Failed to send the emai, please try again later.',
+      );
+    }
+    throw error;
+  }
 };

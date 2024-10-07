@@ -42,7 +42,7 @@ paths:
   /auth/request-reset-email:
     post:
       $ref: ../swagger/paths/auth/send-reset-email.yaml
-  /auth/reset-password:
+  /auth/reset-pwd:
     post:
       $ref: ../swagger/paths/auth/reset-pwd.yaml
 components:

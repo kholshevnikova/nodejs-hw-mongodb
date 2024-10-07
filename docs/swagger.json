@@ -282,7 +282,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Get contact by id",
+            "description": "Successfully found contact with id 65ca67e7ae7f10c88b598384!",
             "content": {
               "application/json": {
                 "schema": {

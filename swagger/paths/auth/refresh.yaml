@@ -1,0 +1,36 @@
+tags:
+  - Auth
+summary: Refresh user
+operationId: refreshUser
+description: 'Refresh user with payload'
+security:
+  - bearerAuth: []
+responses:
+  '200':
+    description: Successfully refreshed a session
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: Successfully refreshed a session!
+            data:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                  example: '9dO1tNBmo6GHrY+r+wetUASg+BwHBQFrN19Hc2tR'
+
+  '401':
+    $ref: '../../components/responses/401.yaml'
+  '400':
+    $ref: '../../components/responses/400.yaml'

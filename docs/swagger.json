@@ -176,9 +176,7 @@
                   "_id",
                   "name",
                   "phoneNumber",
-                  "email",
-                  "contactType",
-                  "userId"
+                  "contactType"
                 ],
                 "properties": {
                   "name": {
@@ -209,11 +207,6 @@
                     "description": "Is contact favourite",
                     "type": "boolean",
                     "example": false
-                  },
-                  "userId": {
-                    "description": "User id",
-                    "type": "string",
-                    "example": "6703d321c9e95ce0dde17a08"
                   },
                   "photo": {
                     "description": "Contact's photo",
